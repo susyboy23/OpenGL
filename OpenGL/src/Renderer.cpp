@@ -1,19 +1,21 @@
 #include "Renderer.h"
+
 #include <iostream>
 
 void GLClearError()
 {
-	// keep looping until glGetError has no more error to throw
-	while (glGetError() != GL_NO_ERROR);
+    while (glGetError() != GL_NO_ERROR);
 }
 
-bool GLLogCall(const char* name, const char* file, int line)
+bool GLLogCall(const char* function, const char* file, int line)
 {
-	while (GLenum error = glGetError())
-	{
-		std::cout << "[OpenGL Error] (" << error << "): " << name << " " << file << " "
-			<< line << "\n";
-		return false;
-	}
-	return true;
+    GLenum error = glGetError();
+
+    if (error)
+    {
+        std::cout << "[OpenGL Error] (" << std::hex << error << ") in " << function << " at " << file << " on line " << std::dec << line << std::endl;
+        return false;
+    }
+
+    return true;
 }
