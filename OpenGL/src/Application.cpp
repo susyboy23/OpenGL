@@ -1,17 +1,19 @@
-#pragma region header files
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-#include "Shader.h"
+
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <sstream>
 
 #include "Renderer.h"
 
 #include "VertexBuffer.h"
+#include "VertexBufferLayout.h"
 #include "IndexBuffer.h"
 #include "VertexArray.h"
-#pragma endregion
+#include "Shader.h"
+#include "Texture.h"
 
 int main(void)
 {
@@ -39,7 +41,7 @@ int main(void)
 
     // Synchronize the refresh rate with our native refresh rate
     glfwSwapInterval(1);
-
+    
     // Initialize Glew
     if (glewInit() != GLEW_OK)
         std::cout << "glewInit error!" << std::endl;
@@ -51,10 +53,10 @@ int main(void)
         // Create and select (bind) the data & buffer for drawing
         float positions[] =
         {
-            -0.5, -0.5, // bottom-left
-             0.5, -0.5, // bottom right
-             0.5,  0.5, // top right
-            -0.5,  0.5  // top left
+            -0.5, -0.5, 0.0f, 0.0f, // bottom-left
+             0.5, -0.5, 1.0f, 0.0f, // bottom right
+             0.5,  0.5, 1.0f, 1.0f, // top right
+            -0.5,  0.5, 0.0f, 1.0f, // top left
         };
 
         // The indexes of the vertices we want to draw
@@ -64,36 +66,49 @@ int main(void)
             2, 3, 0
         };
 
+        GLCall(glEnable(GL_BLEND));
+        GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
+
         VertexArray va; // Initialize our vertex array 
-        VertexBuffer vb(positions, 4 * 2 * sizeof(float)); // Create and bind a buffer for the vertices
+
+        VertexBuffer vb(positions, 4 * 4 * sizeof(float)); // Create and bind a buffer for the vertices
+
         VertexBufferLayout layout; // Create a layout for the buffer we created
-        layout.Push<float>(2); // 
+        layout.Push<float>(2);
+        layout.Push<float>(2);
+
         va.AddBuffer(vb, layout);
-
-        // Create and bind a buffer for the indices
-        IndexBuffer ib(indices, 6);
-
-        Shader shader("res/shaders/Basic.Shader");
+        
+        IndexBuffer ib(indices, 6); // Create and bind a buffer for the indices
+       
+        Shader shader("res/shaders/Basic.shader");
         shader.Bind();
+        shader.SetUniform4f("u_Color", 0.8f, 0.3f, 0.8f, 1.0f);
+
+        Texture texture("res/textures/2.png");
+        texture.Bind();
+        shader.SetUniform1i("u_Texture", 0);
+
+        va.Unbind();
+        vb.Unbind();
+        ib.Unbind();
         shader.Unbind();
 
-        // Set the color of every pixel using uniforms
-       
+        Renderer renderer;
+
+        // Animation stuff
         float r = 0.0f;
         float increment = 0.05f;
 
         // Loop until the user closes the window
         while (!glfwWindowShouldClose(window))
         {
-            GLCall(glClear(GL_COLOR_BUFFER_BIT)); // Render here
+            renderer.Clear();
 
-
-            va.Bind(); // bind the vertex array (vertex buffer and layout)
-            ib.Bind(); // bind the indices
             shader.Bind();
-            shader.SetUniform4f("u_Color", r, 0.8f, 0.8f, 0.8f);
-            // Draw the current selected buffer
-            GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr)); // nullptr, because the indices are bound to the current buffer: GL_ELEMENT_ARRAY_BUFFER
+            shader.SetUniform4f("u_Color", r, 0.3f, 0.8f, 1.0f);
+
+            renderer.Draw(va, ib, shader);
 
             // Animate the r value between 0.0 and 1.0
             if (r > 1.0f)
@@ -105,8 +120,6 @@ int main(void)
             GLCall(glfwSwapBuffers(window)); // Swap front and back buffers
             GLCall(glfwPollEvents()); // Poll for and process events
         }
-
-        
     }
 
     glfwTerminate();
