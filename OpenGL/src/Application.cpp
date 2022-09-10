@@ -32,7 +32,7 @@ int main(void)
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     // Create a windowed mode window and its OpenGL context
-    window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
+    window = glfwCreateWindow(960, 540, "Hello World", NULL, NULL);
     if (!window)
     {
         glfwTerminate();
@@ -44,7 +44,7 @@ int main(void)
 
     // Synchronize the refresh rate with our native refresh rate
     glfwSwapInterval(1);
-    
+
     // Initialize Glew
     if (glewInit() != GLEW_OK)
         std::cout << "glewInit error!" << std::endl;
@@ -56,10 +56,10 @@ int main(void)
         // Create and select (bind) the data & buffer for drawing
         float positions[] =
         {
-            -0.5, -0.5, 0.0f, 0.0f, // bottom-left
-             0.5, -0.5, 1.0f, 0.0f, // bottom right
-             0.5,  0.5, 1.0f, 1.0f, // top right
-            -0.5,  0.5, 0.0f, 1.0f, // top left
+            100.0f, 100.0f, 0.0f, 0.0f, // bottom-left
+            200.0f, 100.0f, 1.0f, 0.0f, // bottom right
+            200.0f, 200.0f, 1.0f, 1.0f, // top right
+            100.0f, 200.0f, 0.0f, 1.0f, // top left
         };
 
         // The indexes of the vertices we want to draw
@@ -69,8 +69,8 @@ int main(void)
             2, 3, 0
         };
 
-        //GLCall(glEnable(GL_BLEND));
-        //GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
+        GLCall(glEnable(GL_BLEND));
+        GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
 
         VertexArray va; // Initialize our vertex array 
 
@@ -81,16 +81,20 @@ int main(void)
         layout.Push<float>(2);
 
         va.AddBuffer(vb, layout);
-        
+
         IndexBuffer ib(indices, 6); // Create and bind a buffer for the indices
 
-        glm::mat4 proj = glm::ortho(-2.0f, 2.0f, -1.5f, 1.5f, -1.0f, 1.0f);
-               
+        glm::mat4 proj = glm::ortho(0.0f, 960.0f, 0.0f, 540.0f, -1.0f, 1.0f);
+        glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(-100, 0, 0));
+        glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(200, 200, 0));
+        glm::mat4 mvp = proj * view * model;
+
         Shader shader("res/shaders/Basic.shader");
         shader.Bind();
         shader.SetUniform4f("u_Color", 0.8f, 0.3f, 0.8f, 1.0f);
-        shader.SetUniformMat4f("u_MVP", proj);
-        Texture texture("res/textures/1.png");
+        shader.SetUniformMat4f("u_MVP", mvp);
+
+        Texture texture("res/textures/ChernoLogo.png");
         texture.Bind();
         shader.SetUniform1i("u_Texture", 0);
 

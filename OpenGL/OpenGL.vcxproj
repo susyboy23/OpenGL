@@ -593,6 +593,7 @@
   <ItemGroup>
     <Image Include="..\..\..\..\Downloads\1.png" />
     <Image Include="..\..\..\..\Downloads\2.png" />
+    <Image Include="res\textures\ChernoLogo.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
