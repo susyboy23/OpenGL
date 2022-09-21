@@ -17,7 +17,7 @@ namespace test {
 		void OnRender() override;
 		void OnImGuiRender() override;
 	private:
-		glm::vec3 m_TranslationA, m_TranslationB;
+		glm::vec3 m_TranslationA;//, m_TranslationB;
 		std::unique_ptr<VertexArray> m_VAO;
 		std::unique_ptr<VertexBuffer> m_VertexBuffer;
 		std::unique_ptr <IndexBuffer> m_IndexBuffer;
