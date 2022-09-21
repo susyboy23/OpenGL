@@ -57,6 +57,12 @@
     <ClCompile Include="src\tests\TestClearColor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\tests\Test.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\tests\TestTexture2D.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shaders\Basic.shader" />
@@ -1367,6 +1373,9 @@
     <ClInclude Include="src\tests\TestClearColor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\tests\TestTexture2D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\..\..\..\Downloads\2.png">
@@ -1376,6 +1385,9 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="res\textures\ChernoLogo.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\2.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
