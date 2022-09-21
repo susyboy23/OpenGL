@@ -10,11 +10,11 @@ namespace test {
 	
 	TestTexture2D::TestTexture2D()
 		: m_Proj(glm::ortho(0.0f, 960.0f, 0.0f, 540.0f, -1.0f, 1.0f)), 
-		m_View(glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0))), m_TranslationA(200,200,0),
-		m_TranslationB(400,200,0)
+		m_View(glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0))), m_TranslationA(200,200,0)/*,
+		m_TranslationB(400,200,0)*/
 		{	
 
-		float positions[] = {
+		const float positions[] = {
 			-150.0,-150.0f, 0.0f, 1.0f,
 			150.0f, -150.0f, 1.0f, 0.0f,
 			150.0f, 150.0f, 1.0f, 1.0f,
@@ -26,7 +26,7 @@ namespace test {
 			-150.0f+200, 150.0f+100, 0.0f, 1.0f
 		};
 
-		unsigned int indices[] =
+		const uint32_t indices[] =
 		{	0,1,2,
 			2,3,0, 
 			4,5,6,
@@ -72,14 +72,14 @@ namespace test {
 			m_Shader->SetUniformMat4f("u_MVP", mvp);
 			renderer.Draw(*m_VAO, *m_IndexBuffer, *m_Shader);
 		}
-		//{
-		//	glm::mat4 model = glm::translate(glm::mat4(1.0f), m_TranslationB);
-		//	glm::mat4 mvp = m_Proj * m_View * model;
-		//	m_Shader->Bind();
-		//	m_Shader->SetUniformMat4f("u_MVP", mvp);
-		//	renderer.Draw(*m_VAO, *m_IndexBuffer, *m_Shader);
+		/*{
+			glm::mat4 model = glm::translate(glm::mat4(1.0f), m_TranslationB);
+			glm::mat4 mvp = m_Proj * m_View * model;
+			m_Shader->Bind();
+			m_Shader->SetUniformMat4f("u_MVP", mvp);
+			renderer.Draw(*m_VAO, *m_IndexBuffer, *m_Shader);
 
-		//}
+		*/}
 	}
 	void TestTexture2D:: OnImGuiRender()
 	{
